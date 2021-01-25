@@ -1,0 +1,50 @@
+---
+title: "Ruda TCGA"
+author: "Marcin Radziszewski"
+date: "11/26/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, warning = FALSE, message = F)
+```
+
+```{r}
+library(TCGAbiolinks)
+library(SummarizedExperiment)
+library(M3C)
+library(biomaRt)
+library(dplyr)
+library(edgeR)
+```
+
+
+```{r, eval=F}
+TCGAbiolinks:::getProjectSummary("TCGA-BRCA")
+query.exp <- GDCquery(project = "TCGA-BRCA",
+data.category = "Transcriptome Profiling",
+data.type = "Gene Expression Quantification",
+experimental.strategy = "RNA-Seq",
+workflow.type = "HTSeq - Counts")
+
+all_samples <- query.exp$results[[1]]$cases
+GDCdownload(query.exp, directory = "./TCGA-BRCA")
+data <- GDCprepare(query.exp,save = TRUE, directory = "./TCGA-BRCA", save.filename = "TCGA_BRCA_HTSeq_Counts.rda")
+datatable <- assay(data)
+query.exp$results
+dataClin <- GDCquery_clinic(project = "TCGA-BRCA", "clinical")
+dataPrep <- TCGAanalyze_Preprocessing(object = data)
+essembly_names = rownames(dataPrep)
+```
+
+```{r, eval=F}
+ensembl = useEnsembl(biomart="ensembl", dataset="hsapiens_gene_ensembl", version=101)
+genes <- getBM(
+filters="ensembl_gene_id",
+attributes=c("ensembl_gene_id","hgnc_symbol"),
+values=essembly_names,
+mart=ensembl)
+
+rownames(dataPrep) = genes[match(rownames(dataPrep), genes$ensembl_gene_id),2]
+cpm_data = cpm(dataPrep)
+```
