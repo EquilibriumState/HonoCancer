@@ -1,7 +1,7 @@
 # HonoCancer
 
 Shiny app for basic analysis RNA-seq data derived from TCGA database
-You can check it on https://www.shinyapps.io/admin/#/application/3317039
+You can check it on  https://dehvirahaman.shinyapps.io/HonoCancer/
 
 RudaTCGA.Rmd is a code which shows how data frames used in the app was created. Two of them:
 
