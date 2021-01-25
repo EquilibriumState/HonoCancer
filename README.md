@@ -1,4 +1,4 @@
-# BreastCancerApp
+# HonoCancer
 
 Shiny app for basic analysis RNA-seq data derived from TCGA database
 You can check it on https://www.shinyapps.io/admin/#/application/3317039
